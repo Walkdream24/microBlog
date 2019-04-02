@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -24,11 +25,12 @@ class BlogDetailView(DetailView):
     context_object_name = "blog"
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     form_class = BlogForm
     success_url = reverse_lazy("index")
     template_name = "blog/blog_create_form.html"
+    login_url = '/login'
 
     def form_valid(self, form):
         messages.success(self.request, "保存しました")
@@ -40,10 +42,11 @@ class BlogCreateView(CreateView):
 
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     form_class = BlogForm
     template_name = "blog/blog_update_form.html"
+    login_url = '/login'
 
     def get_success_url(self):
         blog_pk = self.kwargs['pk']
@@ -59,9 +62,10 @@ class BlogUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy("index")
+    login_url = '/login'
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "削除しました")

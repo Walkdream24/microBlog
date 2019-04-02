@@ -16,6 +16,15 @@
                     <li>
                         <a href="{% url 'index' %}">Home</a>
                     </li>
+                    {% if user.is_authenticated %}
+                     {# ログインしている時 #}
+                    <li><a href="#">{{ user.username }}</a></li>
+                    <li><a href="{% url 'logout' %}">ログアウト</a> </li>
+
+                    {% else %}
+                    {# ログインしていない時 #}
+                    <li><a href="{% url 'login' %}">ログイン</a> </li>
+                    {% endif %}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
